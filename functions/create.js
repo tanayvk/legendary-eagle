@@ -18,7 +18,7 @@ exports.handler = async function(event, context) {
     message = "success";
 
     data = [];
-    await database.ref('hello').get().then(x => { console.log(x.val()) });
+    await database.ref('hello').get().then(x => { console.log(x.val()) }).catch(x=>{console.log(x);});
 
     return {
         statusCode: 200,
