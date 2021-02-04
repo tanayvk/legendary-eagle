@@ -1,4 +1,5 @@
 const firebase = require("firebase-admin");
+console.log(process.version);
 
 var serviceAccount = JSON.parse( process.env.FIREBASE_KEY );
 
