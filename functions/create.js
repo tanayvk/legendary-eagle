@@ -44,7 +44,8 @@ exports.handler = async function(event, context) {
     workspaceRef.set({
         'name': workspaceName,
         'password': hash,
-    }).then(() => console.log("done"));
+    }).then(() => console.log("done"))
+      .catch(err => console.log(err));
 
     return {
         statusCode: 200,
