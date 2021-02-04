@@ -42,7 +42,7 @@ exports.handler = async function(event, context) {
 
     var workspaceRef = database.ref('workspaces/' + workspaceName);
 
-    workspaceRef.set({
+    await workspaceRef.set({
         'name': workspaceName,
         'password': hash,
     }).then(() => console.log("done"))
