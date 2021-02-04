@@ -3,7 +3,7 @@ const CryptoJS = require("crypto-js");
 const Base64 = require("crypto-js/enc-base64");
 
 var serviceAccount = JSON.parse( process.env.FIREBASE_KEY );
-if ( firebase.apps.length == 0 )
+if ( !firebase.apps.length )
 {
     firebase.initializeApp({
         credential: firebase.credential.cert(serviceAccount),
