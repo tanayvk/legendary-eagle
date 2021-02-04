@@ -1,2 +1,7 @@
 [build]
     functions = "functions"
+    command = "yarn run build"
+
+[dev]
+  command = "yarn start"
+  port = 8888
