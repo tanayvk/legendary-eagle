@@ -38,6 +38,7 @@ exports.handler = async function(event, context) {
     // Note: password is hashed once on the frontend and once on the backend
     let hash = Base64.stringify(CryptoJS.SHA256(password));
     hash = Base64.stringify(CryptoJS.SHA256(hash));
+    console.log(workspaceName, password, hash);
 
     var workspaceRef = database.ref('workspaces/' + workspaceName);
 
