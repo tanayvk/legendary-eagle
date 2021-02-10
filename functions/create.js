@@ -20,19 +20,39 @@ function generateRandomLetter()
     return String.fromCharCode("a".charCodeAt(0) + letterIndex);
 }
 
-function generateWorkspaceName()
+async function generateString()
 {
-    let letters = [];
-    for (var i = 0; i < 10; i++)
-    {
-        letters.push(generateRandomLetter());
+    var generatedCountRef = database.ref('generated/count');
+    var count = await generatedCountRef.once('value');
+    count = count.val();
+
+    var randomIndex = Math.floor(Math.random() * count);
+    var randomRef = database.ref('generated/' + randomIndex);
+    var generatedName = await randomRef.once('value');
+    generatedName = generatedName.val();
+
+    return generatedName;
+}
+
+async function generateWorkspaceName()
+{
+    var found = false;
+    var string;
+    do {
+        string = await generateString();
+        const workspaceRef = database.ref('workspaces/' + string);
+        const workspaceVal = await workspaceRef.once('value');
+        if (workspaceVal.val() == undefined)
+            found = true;
     }
-    return letters.join("");
+    while( !found );
+
+    return string;
 }
 
 exports.handler = async function(event, context) {
-    let workspaceName = generateWorkspaceName();
-    let password = generateWorkspaceName();
+    let workspaceName = await generateWorkspaceName();
+    let password = await generateString();
 
     // compute the double hash to store in the database
     // Note: password is hashed once on the frontend and once on the backend
