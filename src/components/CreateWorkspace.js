@@ -4,7 +4,6 @@ import { API_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
 
 function CreateForm(props) {
-  // console.log(props.visibility);
   let classes =
     "py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500 w-full transition-all ";
   if (props.offset == "left") {
