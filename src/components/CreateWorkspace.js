@@ -15,8 +15,8 @@ function CreateForm(props) {
   }
 
   return (
-    <div class="mb-4 mt-4 ">
-      <form class="space-y-2 ">
+    <div className="mb-4 mt-4 ">
+      <form className="space-y-2 font-mono text-2xl ">
         <input
           type="text"
           placeholder="Workspace Handle"
