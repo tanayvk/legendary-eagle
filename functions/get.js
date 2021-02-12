@@ -27,17 +27,18 @@ exports.handler = async function (event, context) {
   }
 
   if (!(body.workspaceName && body.passwordHash))
-    return { statusCode: 400, headers };
+    return { statusCode: 400, headers, body: "error" };
 
   const { workspaceName, passwordHash } = body;
   const workspaceRef = database.ref("workspaces/" + workspaceName);
   const workspaceVal = await workspaceRef.once("value");
-  if (workspaceVal.val() == undefined) return { statusCode: 400 };
+  if (workspaceVal.val() == undefined)
+    return { statusCode: 400, headers, body: "error" };
   // Workspace exists
   const workspaceObject = workspaceVal.val();
   let passwordHashHash = Base64.stringify(CryptoJS.SHA256(passwordHash));
   if (passwordHashHash != workspaceObject.password)
-    return { statusCode: 401, headers };
+    return { statusCode: 401, headers, body: "error" };
   // Authorized to get workspace
   content = workspaceObject.content;
   return {
