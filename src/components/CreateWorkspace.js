@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { API_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
-
+let username;
 function CreateForm(props) {
   let classes =
     "py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500 w-full transition-all ";
@@ -59,6 +59,7 @@ class CreateWorkspace extends React.Component {
           workspacePassword: response.data.password,
           formLoading: false,
         });
+        username = this.state.workspaceName;
         this.shake();
       })
       .catch(function (error) {
