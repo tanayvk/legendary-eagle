@@ -75,6 +75,7 @@ class CreateWorkspace extends React.Component {
           workspacePassword: response.data.password,
           formLoading: false,
         });
+        username = this.state.workspaceName;
         this.shake();
       })
       .catch(function (error) {
