@@ -14,6 +14,10 @@ var database = firebase.database();
 
 exports.handler = async function (event, context) {
   var body = {};
+  var headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  };
   if (event.body) {
     try {
       body = JSON.parse(event.body);
@@ -22,7 +26,8 @@ exports.handler = async function (event, context) {
     }
   }
 
-  if (!(body.workspaceName && body.passwordHash)) return { statusCode: 400 };
+  if (!(body.workspaceName && body.passwordHash))
+    return { statusCode: 400, headers };
 
   const { workspaceName, passwordHash } = body;
   const workspaceRef = database.ref("workspaces/" + workspaceName);
@@ -31,14 +36,13 @@ exports.handler = async function (event, context) {
   // Workspace exists
   const workspaceObject = workspaceVal.val();
   let passwordHashHash = Base64.stringify(CryptoJS.SHA256(passwordHash));
-  if (passwordHashHash != workspaceObject.password) return { statusCode: 401 };
+  if (passwordHashHash != workspaceObject.password)
+    return { statusCode: 401, headers };
   // Authorized to get workspace
   content = workspaceObject.content;
   return {
     statusCode: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify({
       content,
     }),
