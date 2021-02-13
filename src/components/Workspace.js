@@ -42,11 +42,23 @@ class Workspace extends React.Component {
           content: "",
         });
       }
+      console.log(
+        state.activeNote,
+        index,
+        state.activeNote - (state.activeNote > index),
+        index != state.activeNote
+      );
       return {
         notes: state.notes,
-        activeNote: index != state.activeNote ? state.activeNote : 0,
+        activeNote:
+          index != state.activeNote
+            ? state.activeNote - (state.activeNote > index)
+            : 0,
       };
+    }).then(() => {
+      console.log(this.state.activeNote, this.state.notes.length);
     });
+    console.log(this.state.activeNote, this.state.notes.length);
   }
   handleContentChange(e) {
     this.setState((state) => {
@@ -85,7 +97,7 @@ class Workspace extends React.Component {
   renderNotes() {
     let noteClasses =
       "px-6 py-3 text-left flex font-medium hover:bg-gray-100 text-gray-500 uppercase tracking-wider min-h ";
-    let selected = "bg-indigo-200";
+    let selected = "bg-indigo-100";
     return this.state.notes.map((note, index) => (
       <tr>
         <th
@@ -124,18 +136,18 @@ class Workspace extends React.Component {
         <div class=" items-center justify-center ">
           <div>
             <div class="md:grid md:grid-cols-3 md:gap-6 m-4">
-              <div class="md:col-span-1">
+              <div class="md:col-span-1 overflow-auto">
                 <div class="px-4 sm:px-0">
                   <div class="flex flex-col">
-                    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="-my-2 overflow-auto sm:-mx-6 lg:-mx-8">
                       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <div class="shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                           <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                               <tr>
                                 <th
                                   scope="col"
-                                  class="px-6 py-3 grid grid-cols-6 text-xs bg-indigo-100 flex item-strech font-medium text-gray-500 uppercase tracking-wider"
+                                  class="px-6 py-3 grid grid-cols-6 text-xs bg-indigo-200 flex item-strech font-medium text-gray-500 uppercase tracking-wider"
                                 >
                                   <span class="text-left col-span-5 text-lg">
                                     NOTES
@@ -160,31 +172,31 @@ class Workspace extends React.Component {
               </div>
               <div class="mt-5 md:mt-0 md:col-span-2">
                 <form action="#" method="POST">
-                  <div class="shadow sm:rounded-md sm:overflow-hidden">
+                  <div class="  sm:overflow-hidden">
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                       <div>
                         <div class="mt-1 mb-3">
-                          <textarea
+                          <input
                             id="about"
                             name="name"
-                            rows="1"
-                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 mb-4 block w-full sm:text-sm border-gray-300 rounded-md"
+                            type="text"
+                            class=" py-2 px-2 border-0 border-b-2 border-indigo-200 outline-none  text-xl  w-full transition-all "
                             placeholder="Name"
                             value={this.state.notes[this.state.activeNote].name}
                             onChange={this.handleNameChange}
-                          ></textarea>
+                          ></input>
                           <textarea
                             id="about"
                             name="about"
-                            rows="20"
-                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Content goes here."
+                            rows="15"
+                            class=" p-2 outline-none mt-1 mb-4 text-lg w-full overflow-auto "
+                            placeholder="Content "
                             value={
                               this.state.notes[this.state.activeNote].content
                             }
                             onChange={this.handleContentChange}
                           ></textarea>
-                          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                          {/* <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                             <button
                               type="button"
                               class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -192,7 +204,7 @@ class Workspace extends React.Component {
                             >
                               Save
                             </button>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>
