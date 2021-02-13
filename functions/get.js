@@ -25,6 +25,7 @@ exports.handler = async function (event, context) {
       body = querystring.parse(event.body);
     }
   }
+  console.log(body, event.body);
 
   if (!(body.workspaceName && body.passwordHash))
     return { statusCode: 400, headers, body: "error" };
@@ -40,7 +41,7 @@ exports.handler = async function (event, context) {
   if (passwordHashHash != workspaceObject.password)
     return { statusCode: 401, headers, body: "error" };
   // Authorized to get workspace
-  content = workspaceObject.content;
+  content = workspaceObject.content || "";
   return {
     statusCode: 200,
     headers,
