@@ -6,29 +6,112 @@ class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.state.Notes = [];
-    this.handleNotes = this.handleNotes.bind(this);
-  }
-
-  handleNotes() {
-    const notes = [
+    this.state.notes = [
       {
-        name: "Aryan",
-        content: "Such a noob",
-      },
-      {
-        name: "Amrit",
-        content: "Such a noob",
+        name: "New Note",
+        content: "",
       },
     ];
+    this.state.activeNote = 0;
+    this.handleContentChange = this.handleContentChange.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.addContent = this.addContent.bind(this);
+    this.createNewContent = this.createNewContent.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+  createNewContent() {
+    this.setState((state) => {
+      let note = {
+        name: "New note",
+        content: "",
+      };
+      state.notes.push(note);
+      state.activeNote = state.notes.length - 1;
+      return {
+        notes: state.notes,
+        activeNote: state.activeNote,
+      };
+    });
+  }
+  deleteNote(index) {
+    this.setState((state) => {
+      state.notes.splice(index);
+      if (state.notes.length == 0) {
+        state.notes.push({
+          name: "New Note",
+          content: "",
+        });
+      }
+      return {
+        notes: state.notes,
+        activeNote: index != state.activeNote ? state.activeNote : 0,
+      };
+    });
+  }
+  handleContentChange(e) {
+    this.setState((state) => {
+      state.notes[state.activeNote].content = e.target.value;
+      return {
+        notes: state.notes,
+      };
+    });
+  }
+  handleNameChange(e) {
+    this.setState((state) => {
+      state.notes[state.activeNote].name = e.target.value;
+      return {
+        notes: state.notes,
+      };
+    });
+  }
 
-    return notes.map((note) => (
+  addContent() {
+    this.setState((state) => {
+      let note = {
+        name: this.state.notes[this.state.activeNote].name,
+        content: state.content,
+      };
+      state.notes.push(note);
+
+      return {
+        notes: state.notes,
+      };
+    });
+  }
+  handleDelete(e, i) {
+    this.deleteNote(i);
+  }
+
+  renderNotes() {
+    let noteClasses =
+      "px-6 py-3 text-left flex font-medium hover:bg-gray-100 text-gray-500 uppercase tracking-wider min-h ";
+    let selected = "bg-indigo-200";
+    return this.state.notes.map((note, index) => (
       <tr>
         <th
           scope="col"
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          class={
+            index == this.state.activeNote
+              ? noteClasses + selected
+              : noteClasses
+          }
         >
-          {note.name}
+          <span
+            class=" text-left flex-grow text-xs"
+            onClick={(e) => {
+              this.setState({
+                activeNote: index,
+              });
+            }}
+          >
+            {note.name}
+          </span>
+          <i
+            class=" text-sm fa fa-trash fa-2x"
+            onClick={(e) => {
+              this.handleDelete(e, index);
+            }}
+          ></i>
         </th>
       </tr>
     ));
@@ -36,9 +119,9 @@ class Workspace extends React.Component {
 
   render() {
     return (
-      <div class="">
+      <div class="h-screen overflow-hidden">
         <Header />
-        <div class="h-screen overflow-hidden items-center justify-center ">
+        <div class=" items-center justify-center ">
           <div>
             <div class="md:grid md:grid-cols-3 md:gap-6 m-4">
               <div class="md:col-span-1">
@@ -52,13 +135,22 @@ class Workspace extends React.Component {
                               <tr>
                                 <th
                                   scope="col"
-                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                  class="px-6 py-3 grid grid-cols-6 text-xs bg-indigo-100 flex item-strech font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                  NOTES
+                                  <span class="text-left col-span-5 text-lg">
+                                    NOTES
+                                  </span>
+                                  <span class="col-span-1 text-right item-end hover:text-indigo-500 ">
+                                    <i
+                                      class="fa fa-plus fa-2x "
+                                      aria-hidden="true"
+                                      onClick={this.createNewContent}
+                                    ></i>
+                                  </span>
                                 </th>
                               </tr>
                             </thead>
-                            {this.handleNotes()}
+                            {this.renderNotes()}
                           </table>
                         </div>
                       </div>
@@ -71,30 +163,38 @@ class Workspace extends React.Component {
                   <div class="shadow sm:rounded-md sm:overflow-hidden">
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                       <div>
-                        <label
-                          for="about"
-                          class="block text-sm font-medium text-gray-700"
-                        >
-                          Content
-                        </label>
-                        <div class="mt-1">
+                        <div class="mt-1 mb-3">
+                          <textarea
+                            id="about"
+                            name="name"
+                            rows="1"
+                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 mb-4 block w-full sm:text-sm border-gray-300 rounded-md"
+                            placeholder="Name"
+                            value={this.state.notes[this.state.activeNote].name}
+                            onChange={this.handleNameChange}
+                          ></textarea>
                           <textarea
                             id="about"
                             name="about"
                             rows="20"
                             class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
-                            placeholder="you@example.com"
+                            placeholder="Content goes here."
+                            value={
+                              this.state.notes[this.state.activeNote].content
+                            }
+                            onChange={this.handleContentChange}
                           ></textarea>
+                          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                            <button
+                              type="button"
+                              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              onClick={this.addContent}
+                            >
+                              Save
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                      <button
-                        type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >
-                        Save
-                      </button>
                     </div>
                   </div>
                 </form>
