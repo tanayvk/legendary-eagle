@@ -12,17 +12,13 @@ function Header(props) {
           <div class="text-lg font-mono lg:flex-grow">
             {localStorage.getItem("workspaceName")}
           </div>
-          <div class="space-x-2">
-            <a
-              class="inline-block text-sm px-4 py-2 border rounded text-white border-white hover:border-transparent hover:text-teal hover:bg-white mt-4 lg:mt-0"
-              onClick={() => {}}
-            >
-              Change password
+          <div class="">
+            <a class="blocks " onClick={() => {}}>
+              Change Password
             </a>
-            <a
-              href="#"
-              class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal hover:bg-white mt-4 lg:mt-0"
-            >
+          </div>
+          <div>
+            <a href="#" class=" blocks">
               Exit Workspace
             </a>
           </div>

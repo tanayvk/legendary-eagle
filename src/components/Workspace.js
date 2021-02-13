@@ -1,6 +1,7 @@
 import Header from "./Header.js";
 import React from "react";
 import ReactDOM from "react-dom";
+import Swal from "sweetalert2";
 
 class Workspace extends React.Component {
   constructor(props) {
@@ -33,6 +34,7 @@ class Workspace extends React.Component {
       };
     });
   }
+
   deleteNote(index) {
     this.setState((state) => {
       state.notes.splice(index, 1);
@@ -88,8 +90,19 @@ class Workspace extends React.Component {
       };
     });
   }
+
   handleDelete(e, i) {
-    this.deleteNote(i);
+    Swal.fire({
+      title: "Do you want to delete this note?",
+      showDenyButton: true,
+      showCancelButton: true,
+      showConfirmButton: false,
+      denyButtonText: `Delete`,
+    }).then((result) => {
+      if (result.isDenied) {
+        this.deleteNote(i);
+      }
+    });
   }
 
   renderNotes() {
@@ -117,7 +130,7 @@ class Workspace extends React.Component {
             {note.name}
           </span>
           <i
-            class=" text-sm fa fa-trash fa-2x"
+            class=" text-sm fa fa-trash fa-2x hover:text-indigo-500 cursor-pointer"
             onClick={(e) => {
               this.handleDelete(e, index);
             }}
@@ -134,10 +147,10 @@ class Workspace extends React.Component {
         <div class=" items-center justify-center ">
           <div>
             <div class="md:grid md:grid-cols-3 md:gap-6 m-4">
-              <div class="md:col-span-1 overflow-auto">
+              <div class="md:col-span-1 overflow-y-auto overflow-x-hidden ">
                 <div class="px-4 sm:px-0">
                   <div class="flex flex-col">
-                    <div class="-my-2 overflow-auto sm:-mx-6 lg:-mx-8">
+                    <div class="-my-2  sm:-mx-6 overflow-hidden lg:-mx-8">
                       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                           <table class="min-w-full divide-y divide-gray-200">
@@ -152,7 +165,7 @@ class Workspace extends React.Component {
                                   </span>
                                   <span class="col-span-1 text-right item-end hover:text-indigo-500 ">
                                     <i
-                                      class="fa fa-plus fa-2x "
+                                      class="fa fa-plus fa-2x cursor-pointer"
                                       aria-hidden="true"
                                       onClick={this.createNewContent}
                                     ></i>
@@ -168,12 +181,12 @@ class Workspace extends React.Component {
                   </div>
                 </div>
               </div>
-              <div class="mt-5 md:mt-0 md:col-span-2">
+              <div class="mt-2 md:mt-0 md:col-span-2">
                 <form action="#" method="POST">
                   <div class="  sm:overflow-hidden">
-                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                    <div class="px-4 py-3 bg-white space-y-6 ">
                       <div>
-                        <div class="mt-1 mb-3">
+                        <div class="mt-1 mb-3 overflow-auto">
                           <input
                             id="about"
                             name="name"
