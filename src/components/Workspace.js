@@ -35,7 +35,7 @@ class Workspace extends React.Component {
   }
   deleteNote(index) {
     this.setState((state) => {
-      state.notes.splice(index);
+      state.notes.splice(index, 1);
       if (state.notes.length == 0) {
         state.notes.push({
           name: "New Note",
@@ -55,8 +55,6 @@ class Workspace extends React.Component {
             ? state.activeNote - (state.activeNote > index)
             : 0,
       };
-    }).then(() => {
-      console.log(this.state.activeNote, this.state.notes.length);
     });
     console.log(this.state.activeNote, this.state.notes.length);
   }
@@ -97,7 +95,7 @@ class Workspace extends React.Component {
   renderNotes() {
     let noteClasses =
       "px-6 py-3 text-left flex font-medium hover:bg-gray-100 text-gray-500 uppercase tracking-wider min-h ";
-    let selected = "bg-indigo-100";
+    let selected = "bg-indigo-100 hover:bg-indigo-100";
     return this.state.notes.map((note, index) => (
       <tr>
         <th
@@ -147,9 +145,9 @@ class Workspace extends React.Component {
                               <tr>
                                 <th
                                   scope="col"
-                                  class="px-6 py-3 grid grid-cols-6 text-xs bg-indigo-200 flex item-strech font-medium text-gray-500 uppercase tracking-wider"
+                                  class="px-6 py-3 text-xs bg-indigo-200 flex item-strech font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                  <span class="text-left col-span-5 text-lg">
+                                  <span class="text-left flex-grow text-lg">
                                     NOTES
                                   </span>
                                   <span class="col-span-1 text-right item-end hover:text-indigo-500 ">
