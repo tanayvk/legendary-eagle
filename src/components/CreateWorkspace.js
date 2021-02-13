@@ -10,6 +10,7 @@ class CreateWorkspace extends React.Component {
     this.state = {};
     this.state.pressedCount = 0;
     this.state.formLoading = false;
+    this.state.accessLoading = false;
     this.state.workspaceName = "";
     this.state.workspacePassword = "";
     this.state.offset = "";
@@ -64,6 +65,7 @@ class CreateWorkspace extends React.Component {
 
   handleCreate() {
     this.setState({
+      errorMessage: "",
       formLoading: true,
       pressedCount: this.state.pressedCount + 1,
     });
@@ -73,35 +75,36 @@ class CreateWorkspace extends React.Component {
         this.setState({
           workspaceName: response.data.name,
           workspacePassword: response.data.password,
-          formLoading: false,
         });
-        username = this.state.workspaceName;
         this.shake();
       })
       .catch(function (error) {
         console.log(error);
+      })
+      .then(() => {
+        this.setState({
+          formLoading: false,
+        });
       });
   }
 
   handleAccess() {
-    console.log(
-      "access",
-      this.state.workspaceName,
-      computeHash(this.state.workspacePassword),
-      computeHash(computeHash(this.state.workspacePassword))
-    );
-
+    this.setState({
+      accessLoading: true,
+    });
+    const passwordHash = computeHash(this.state.workspacePassword);
     axios
       .post(
         API_URL + "get",
         {
           workspaceName: this.state.workspaceName,
-          passwordHash: computeHash(this.state.workspacePassword),
+          passwordHash: passwordHash,
         },
         { headers: { "Content-Type": "text/plain" } }
       )
       .then((response) => {
-        console.log("here");
+        localStorage.setItem("workspaceName", this.state.workspaceName);
+        localStorage.setItem("passwordToken", passwordHash);
         this.props.history.push("/workspace");
         console.log(response);
       })
@@ -114,6 +117,11 @@ class CreateWorkspace extends React.Component {
           this.setState({
             errorMessage: "Workspace does not exist!",
           });
+      })
+      .then(() => {
+        this.setState({
+          accessLoading: false,
+        });
       });
   }
 
@@ -162,7 +170,9 @@ class CreateWorkspace extends React.Component {
   }
 
   renderAccessButton() {
-    return (
+    return this.state.accessLoading ? (
+      this.renderCreateLoading()
+    ) : (
       <button
         className={
           "w-full text-white text-center p-3 rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-semibold text-lg focus:border focus:border-2 "
