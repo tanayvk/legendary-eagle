@@ -9,10 +9,12 @@ function Header(props) {
           <button class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white"></button>
         </div>
         <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-          <div class="text-lg font-mono lg:flex-grow">
-            <span class="blocks inline">
-              {localStorage.getItem("workspaceName")}
-            </span>
+          <div class="lg:flex-grow">
+            <div class="blocks inline px-3">
+              <span class="text-lg font-mono">
+                {localStorage.getItem("workspaceName")}
+              </span>
+            </div>
           </div>
           <div class="">
             <a class="blocks " onClick={() => {}}>

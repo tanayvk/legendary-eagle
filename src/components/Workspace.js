@@ -1,6 +1,7 @@
 import Header from "./Header.js";
 import React from "react";
 import ReactDOM from "react-dom";
+import ReactMarkdown from "react-markdown";
 import Swal from "sweetalert2";
 
 class Workspace extends React.Component {
@@ -14,6 +15,7 @@ class Workspace extends React.Component {
       },
     ];
     this.state.activeNote = 0;
+    this.state.contentEdit = true;
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.addContent = this.addContent.bind(this);
@@ -118,17 +120,13 @@ class Workspace extends React.Component {
               ? noteClasses + selected
               : noteClasses
           }
+          onClick={(e) => {
+            this.setState({
+              activeNote: index,
+            });
+          }}
         >
-          <span
-            class=" text-left flex-grow text-xs"
-            onClick={(e) => {
-              this.setState({
-                activeNote: index,
-              });
-            }}
-          >
-            {note.name}
-          </span>
+          <span class=" text-left flex-grow text-xs">{note.name}</span>
           <i
             class=" text-sm fa fa-trash fa-2x hover:text-indigo-500 cursor-pointer"
             onClick={(e) => {
@@ -182,32 +180,47 @@ class Workspace extends React.Component {
                 </div>
               </div>
               <div class="mt-2 md:mt-0 md:col-span-2">
-                <form action="#" method="POST">
-                  <div class="  sm:overflow-hidden">
-                    <div class="px-4 py-3 bg-white space-y-6 ">
-                      <div>
-                        <div class="mt-1 mb-3 overflow-auto">
-                          <input
-                            id="about"
-                            name="name"
-                            type="text"
-                            class=" py-2 px-2 border-0 border-b-2 border-indigo-200 outline-none  text-xl  w-full transition-all "
-                            placeholder="Name"
-                            value={this.state.notes[this.state.activeNote].name}
-                            onChange={this.handleNameChange}
-                          ></input>
-                          <textarea
-                            id="about"
-                            name="about"
-                            rows="15"
-                            class=" p-2 outline-none mt-1 mb-4 text-lg w-full overflow-auto "
-                            placeholder="Content "
-                            value={
-                              this.state.notes[this.state.activeNote].content
-                            }
-                            onChange={this.handleContentChange}
-                          ></textarea>
-                          {/* <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <div class="  sm:overflow-hidden">
+                  <div class="px-4 py-3 bg-white space-y-6 ">
+                    <div>
+                      <div class="mt-1 mb-3 overflow-auto">
+                        <input
+                          id="about"
+                          name="name"
+                          type="text"
+                          class=" py-2 px-2 border-0 border-b-2 border-indigo-200 outline-none  text-xl  w-full transition-all "
+                          placeholder="Name"
+                          value={this.state.notes[this.state.activeNote].name}
+                          onChange={this.handleNameChange}
+                        ></input>
+                        <div
+                          class="flex flex-col h-screen text-lg block p-2 mt-1 mb-4 "
+                          onClick={() => {
+                            this.setState({ contentEdit: true });
+                          }}
+                        >
+                          {this.state.contentEdit ? (
+                            <textarea
+                              autoFocus="true"
+                              class="flex-grow w-full overflow-auto outline-none"
+                              id="content"
+                              style={{ resize: "none", maxHeight: "75%" }}
+                              placeholder="Content "
+                              value={
+                                this.state.notes[this.state.activeNote].content
+                              }
+                              onChange={this.handleContentChange}
+                              onBlur={() => {
+                                this.setState({ contentEdit: false });
+                              }}
+                            ></textarea>
+                          ) : (
+                            <ReactMarkdown>
+                              {this.state.notes[this.state.activeNote].content}
+                            </ReactMarkdown>
+                          )}
+                        </div>
+                        {/* <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                             <button
                               type="button"
                               class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -216,11 +229,10 @@ class Workspace extends React.Component {
                               Save
                             </button>
                           </div> */}
-                        </div>
                       </div>
                     </div>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
