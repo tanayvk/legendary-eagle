@@ -1,37 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { API_URL } from "../utils/constants";
-import { Link } from "react-router-dom";
-
-function CreateForm(props) {
-  let classes =
-    "py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500 w-full transition-all ";
-  if (props.offset == "left") {
-    classes += "transform -translate-x-4 ";
-  }
-  if (props.offset == "right") {
-    classes += "transform translate-x-4 ";
-  }
-
-  return (
-    <div className="mb-4 mt-4 ">
-      <form className="space-y-2 font-mono text-2xl ">
-        <input
-          type="text"
-          placeholder="Workspace Handle"
-          className={classes}
-          value={props.workspaceName}
-        />
-        <input
-          type="text"
-          placeholder="Shh.. Top secret!"
-          className={classes}
-          value={props.workspacePassword}
-        />
-      </form>
-    </div>
-  );
-}
+import { Link, useHistory } from "react-router-dom";
+import { computeHash } from "../utils/utils.js";
 
 class CreateWorkspace extends React.Component {
   constructor(props) {
@@ -39,43 +10,124 @@ class CreateWorkspace extends React.Component {
     this.state = {};
     this.state.pressedCount = 0;
     this.state.formLoading = false;
+    this.state.accessLoading = false;
     this.state.workspaceName = "";
     this.state.workspacePassword = "";
     this.state.offset = "";
+    this.state.errorMessage = "";
+
     this.handleCreate = this.handleCreate.bind(this);
+    this.handleAccess = this.handleAccess.bind(this);
+  }
+
+  renderCreateForm() {
+    let classes = "blocks transition-all ";
+    if (this.state.offset == "left") {
+      classes += "transform -translate-x-4 ";
+    }
+    if (this.state.offset == "right") {
+      classes += "transform translate-x-4 ";
+    }
+
+    return (
+      <div className="mb-4 mt-4 ">
+        <form className="space-y-2 font-mono text-2xl ">
+          {this.state.errorMessage != "" ? (
+            <div class="items-center text-center mb-2">
+              <p class="bg-red-400 text-sm px-4 py-2 rounded-full inline">
+                {this.state.errorMessage}
+              </p>
+            </div>
+          ) : (
+            ""
+          )}
+          <div class={classes}>
+            <input
+              type="text"
+              placeholder="Workspace Handle"
+              className="py-3 px-4 outline-none w-full"
+              value={this.state.workspaceName}
+              onChange={(e) => this.setState({ workspaceName: e.target.value })}
+            />
+          </div>
+          <div class={classes}>
+            <input
+              type="text"
+              placeholder="Shh.. Top secret!"
+              className="py-3 px-4 outline-none w-full"
+              value={this.state.workspacePassword}
+              onChange={(e) =>
+                this.setState({ workspacePassword: e.target.value })
+              }
+            />
+          </div>
+        </form>
+      </div>
+    );
   }
 
   handleCreate() {
     this.setState({
+      errorMessage: "",
       formLoading: true,
       pressedCount: this.state.pressedCount + 1,
     });
     axios
       .get(API_URL + "create")
       .then((response) => {
-        console.log(response.data.name);
         this.setState({
           workspaceName: response.data.name,
           workspacePassword: response.data.password,
-          formLoading: false,
         });
         this.shake();
       })
       .catch(function (error) {
         console.log(error);
+      })
+      .then(() => {
+        this.setState({
+          formLoading: false,
+        });
       });
   }
 
-  renderCreateForm() {
-    return (
-      <CreateForm
-        visibility={this.state.formVisible}
-        workspaceName={this.state.workspaceName}
-        workspacePassword={this.state.workspacePassword}
-        offset={this.state.offset}
-      />
-    );
+  handleAccess() {
+    this.setState({
+      accessLoading: true,
+    });
+    const passwordHash = computeHash(this.state.workspacePassword);
+    axios
+      .post(
+        API_URL + "get",
+        {
+          workspaceName: this.state.workspaceName,
+          passwordHash: passwordHash,
+        },
+        { headers: { "Content-Type": "text/plain" } }
+      )
+      .then((response) => {
+        localStorage.setItem("workspaceName", this.state.workspaceName);
+        localStorage.setItem("passwordToken", passwordHash);
+        this.props.history.push("/workspace");
+        console.log(response);
+      })
+      .catch((error) => {
+        if (error.response.status == 401)
+          this.setState({
+            errorMessage: "Wrong pass phrase!",
+          });
+        else
+          this.setState({
+            errorMessage: "Workspace does not exist!",
+          });
+      })
+      .then(() => {
+        this.setState({
+          accessLoading: false,
+        });
+      });
   }
+
   shake() {
     this.setState({ offset: "left" });
 
@@ -89,9 +141,7 @@ class CreateWorkspace extends React.Component {
   renderWorkspaceButton() {
     return (
       <button
-        className={
-          "w-full text-white p-3 rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-semibold text-lg focus:border focus:border-2 "
-        }
+        className={"w-full blocks accent text-2xl"}
         onClick={this.handleCreate}
       >
         {this.state.pressedCount > 0
@@ -121,16 +171,18 @@ class CreateWorkspace extends React.Component {
   }
 
   renderAccessButton() {
-    return (
-      <Link to="/workspace">
-        <p
-          className={
-            "w-full text-white text-center p-3 rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-semibold text-lg focus:border focus:border-2 "
-          }
+    return this.state.accessLoading ? (
+      this.renderCreateLoading()
+    ) : (
+      <div class="flex flex-row-reverse">
+        <button
+          className={"accent blocks text-lg"}
+          onClick={this.handleAccess}
+          style={{ "--block-accent-color": "#4f46e5" }}
         >
-          Access Workspace
-        </p>
-      </Link>
+          Access
+        </button>
+      </div>
     );
   }
 
