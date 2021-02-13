@@ -81,12 +81,20 @@ class Workspace extends React.Component {
   handleDelete(e, i) {
     this.deleteNote(i);
   }
+
   renderNotes() {
+    let noteClasses =
+      "px-6 py-3 text-left flex font-medium hover:bg-gray-100 text-gray-500 uppercase tracking-wider min-h ";
+    let selected = "bg-indigo-200";
     return this.state.notes.map((note, index) => (
       <tr>
         <th
           scope="col"
-          class="px-6 py-3 text-left  flex font-medium  text-gray-500 uppercase tracking-wider min-h "
+          class={
+            index == this.state.activeNote
+              ? noteClasses + selected
+              : noteClasses
+          }
         >
           <span
             class=" text-left flex-grow text-xs"
@@ -127,14 +135,18 @@ class Workspace extends React.Component {
                               <tr>
                                 <th
                                   scope="col"
-                                  class="px-6 py-3 grid grid-cols-6 text-xs flex item-strech font-medium text-gray-500 uppercase tracking-wider"
+                                  class="px-6 py-3 grid grid-cols-6 text-xs bg-indigo-100 flex item-strech font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                  <span class="text-left text-lg">NOTES</span>
-                                  <i
-                                    class="fa fa-plus fa-2x col-span-5 text-right item-end"
-                                    aria-hidden="true"
-                                    onClick={this.createNewContent}
-                                  ></i>
+                                  <span class="text-left col-span-5 text-lg">
+                                    NOTES
+                                  </span>
+                                  <span class="col-span-1 text-right item-end hover:text-indigo-500 ">
+                                    <i
+                                      class="fa fa-plus fa-2x "
+                                      aria-hidden="true"
+                                      onClick={this.createNewContent}
+                                    ></i>
+                                  </span>
                                 </th>
                               </tr>
                             </thead>
@@ -156,7 +168,7 @@ class Workspace extends React.Component {
                             id="about"
                             name="name"
                             rows="1"
-                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
+                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 mb-4 block w-full sm:text-sm border-gray-300 rounded-md"
                             placeholder="Name"
                             value={this.state.notes[this.state.activeNote].name}
                             onChange={this.handleNameChange}
