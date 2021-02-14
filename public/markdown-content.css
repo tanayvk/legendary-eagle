@@ -1,0 +1,86 @@
+/*! Typebase.less v0.1.0 | MIT License */
+/* Setup */
+.markdown-content {
+    /* Change default typefaces here */
+      font-family: serif;
+      font-size: 137.5%;
+      -webkit-font-smoothing: antialiased;
+    /* Copy & Lists */
+    /* Headings */
+    /* Tables */
+    /* Code blocks */
+    /* Leading paragraph text */
+    /* Hug a the block above you */;
+  }
+  
+  .markdown-content p {
+      line-height: 1.5rem;
+  }
+ 
+  .markdown-content ul li,
+  .markdown-content ol li {
+      line-height: 1.5rem;
+  }
+  
+  
+  .markdown-content blockquote {
+      line-height: 1.5rem;
+  }
+  
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3,
+  .markdown-content h4,
+  .markdown-content h5,
+  .markdown-content h6 {
+    /* Change heading typefaces here */
+      font-family: sans-serif;
+      line-height: 1.5rem;
+  }
+  
+  .markdown-content h1 {
+      font-size: 2.25rem;
+      line-height: 4.5rem;
+  }
+  
+  .markdown-content h2 {
+      font-size: 1.5rem;
+      line-height: 3rem;
+  }
+  
+  .markdown-content h3 {
+      font-size: 0.75rem;
+  }
+  
+  .markdown-content h4 {
+      font-size: 0.375rem;
+  }
+  
+  .markdown-content h5 {
+      font-size: 0.25rem;
+  }
+  
+  .markdown-content h6 {
+      font-size: 0.1875rem;
+  }
+  
+  .markdown-content table {
+      border-spacing: 0px;
+      border-collapse: collapse;
+  }
+  
+  .markdown-content table td,
+  .markdown-content table th {
+      padding: 0;
+      line-height: 33px;
+  }
+  
+  .markdown-content code {
+      vertical-align: bottom;
+  }
+  
+  .markdown-content .lead {
+      font-size: 0.75rem;
+  }
+  
+ 

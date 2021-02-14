@@ -216,9 +216,14 @@ class Workspace extends React.Component {
                               }}
                             ></textarea>
                           ) : (
-                            <ReactMarkdown>
-                              {this.state.notes[this.state.activeNote].content}
-                            </ReactMarkdown>
+                            <div class="markdown-content">
+                              <ReactMarkdown>
+                                {
+                                  this.state.notes[this.state.activeNote]
+                                    .content
+                                }
+                              </ReactMarkdown>
+                            </div>
                           )}
                         </div>
                         {/* <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
