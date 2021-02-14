@@ -22,8 +22,16 @@ exports.handler = async function (event, context) {
     }
   }
 
-  if (!(body.workspaceName && body.passwordHash && body.workspaceContent))
+  if (
+    !(
+      body.workspaceName != undefined &&
+      body.passwordHash != undefined &&
+      body.workspaceContent != undefined
+    )
+  ) {
+    console.log(body);
     return { statusCode: 400 };
+  }
 
   const { workspaceName, passwordHash, workspaceContent } = body;
   const workspaceRef = database.ref("workspaces/" + workspaceName);
@@ -36,6 +44,12 @@ exports.handler = async function (event, context) {
   // Authorized to save to workspace
   try {
     await workspaceRef.child("content").set(workspaceContent);
+    if (body.newPasswordHash) {
+      const newPasswordHashHash = Base64.stringify(
+        CryptoJS.SHA256(body.newPasswordHash)
+      );
+      await workspaceRef.child("password").set(newPasswordHashHash);
+    }
   } catch (err) {
     console.log(err);
     return { statusCode: 500 };

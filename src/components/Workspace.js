@@ -141,7 +141,7 @@ class Workspace extends React.Component {
   render() {
     return (
       <div class="h-screen ">
-        <Header />
+        <Header history={this.props.history} />
         <div class=" items-center justify-center ">
           <div>
             <div class="md:grid md:grid-cols-3 md:gap-6 m-4">
