@@ -140,7 +140,7 @@ class Workspace extends React.Component {
 
   render() {
     return (
-      <div class="h-screen overflow-hidden">
+      <div class="h-screen ">
         <Header />
         <div class=" items-center justify-center ">
           <div>
@@ -148,7 +148,7 @@ class Workspace extends React.Component {
               <div class="md:col-span-1 overflow-y-auto overflow-x-hidden ">
                 <div class="px-4 sm:px-0">
                   <div class="flex flex-col">
-                    <div class="-my-2  sm:-mx-6 overflow-hidden lg:-mx-8">
+                    <div class="-my-2  sm:-mx-6  lg:-mx-8">
                       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                           <table class="min-w-full divide-y divide-gray-200">
@@ -180,10 +180,10 @@ class Workspace extends React.Component {
                 </div>
               </div>
               <div class="mt-2 md:mt-0 md:col-span-2">
-                <div class="  sm:overflow-hidden">
-                  <div class="px-4 py-3 bg-white space-y-6 ">
+                <div class="  ">
+                  <div class="px-4 py-3 border-2 mb-2 h-full border-purple-300 rounded-md ">
                     <div>
-                      <div class="mt-1 mb-3 overflow-auto">
+                      <div class="mt-1 mb-3 overflow-auto ">
                         <input
                           id="about"
                           name="name"
@@ -194,7 +194,8 @@ class Workspace extends React.Component {
                           onChange={this.handleNameChange}
                         ></input>
                         <div
-                          class="flex flex-col h-screen text-lg block p-2 mt-1 mb-4 "
+                          class="flex flex-col text-lg block p-1  mt-1 mb-4 "
+                          style={{ height: "67vh" }}
                           onClick={() => {
                             this.setState({ contentEdit: true });
                           }}
@@ -204,7 +205,7 @@ class Workspace extends React.Component {
                               autoFocus="true"
                               class="flex-grow w-full overflow-auto outline-none"
                               id="content"
-                              style={{ resize: "none", maxHeight: "75%" }}
+                              style={{ resize: "none", maxHeight: "100%" }}
                               placeholder="Content "
                               value={
                                 this.state.notes[this.state.activeNote].content
