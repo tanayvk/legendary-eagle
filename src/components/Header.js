@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import { API_URL } from "../utils/constants";
 import { useHistory } from "react-router";
-import { computeHash } from "../utils/utils.js";
 
 class Header extends React.Component {
   constructor(props) {
@@ -11,7 +10,6 @@ class Header extends React.Component {
     this.state = {};
     this.state.changingPassword = false;
     this.state.newPassword = "";
-    this.state.loading = false;
   }
 
   renderChangePassword() {
@@ -28,24 +26,8 @@ class Header extends React.Component {
         <button
           class="blocks accent float-left"
           onClick={(e) => {
-            this.setState({ changingPassword: false, loading: true });
-            const newPasswordHash = computeHash(this.state.newPassword);
-            axios
-              .post(API_URL + "save", {
-                workspaceName: localStorage.getItem("workspaceName"),
-                passwordHash: localStorage.getItem("passwordToken"),
-                workspaceContent: "",
-                newPasswordHash: newPasswordHash,
-              })
-              .then((response) => {
-                localStorage.setItem("passwordToken", newPasswordHash);
-              })
-              .catch((err) => {
-                console.log(err);
-              })
-              .then(() => {
-                this.setState({ loading: false });
-              });
+            this.setState({ changingPassword: false });
+            this.props.onChangePassword(this.state.newPassword);
           }}
         >
           Confirm
@@ -64,7 +46,7 @@ class Header extends React.Component {
 
   render() {
     return (
-      <div class="p-0 bg-gradient-to-r from-indigo-600 via-indigo-400 to-indigo-600">
+      <div class="p-0 bg-gradient-to-b from-indigo-600 to-indigo-500">
         <nav class="flex items-center justify-between flex-wrap bg-teal px-6 py-2">
           <div class="block lg:hidden">
             <button class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white"></button>
@@ -78,8 +60,8 @@ class Header extends React.Component {
               </div>
             </div>
             <div class="px-3">
-              {this.state.loading ? (
-                <i class="fa fa-2x text-red-400 fa-circle-o-notch fa-spin"></i>
+              {this.props.loading ? (
+                <i class="fa fa-2x text-red-400 fa-refresh fa-spin"></i>
               ) : (
                 <i class="fa fa-2x text-green-400 fa-check-circle-o"></i>
               )}
@@ -98,6 +80,11 @@ class Header extends React.Component {
                 </a>
                 {this.state.changingPassword && this.renderChangePassword()}
               </div>
+            </div>
+            <div>
+              <a class=" blocks accent " onClick={this.props.onSave}>
+                Save
+              </a>
             </div>
             <div>
               <a

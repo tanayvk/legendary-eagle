@@ -2,7 +2,10 @@ import Header from "./Header.js";
 import React from "react";
 import ReactDOM from "react-dom";
 import ReactMarkdown from "react-markdown";
+import { computeHash } from "../utils/utils.js";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { API_URL } from "../utils/constants";
 
 class Workspace extends React.Component {
   constructor(props) {
@@ -15,13 +18,50 @@ class Workspace extends React.Component {
       },
     ];
     this.state.activeNote = 0;
-    this.state.contentEdit = true;
+    this.state.contentEdit = false;
+    this.state.loading = false;
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.addContent = this.addContent.bind(this);
     this.createNewContent = this.createNewContent.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleChangePassword = this.handleChangePassword.bind(this);
+    this.handleSave = this.handleSave.bind(this);
   }
+
+  componentDidMount() {
+    this.setState({ loading: true });
+    axios
+      .post(API_URL + "get", {
+        workspaceName: localStorage.getItem("workspaceName"),
+        passwordHash: localStorage.getItem("passwordToken"),
+      })
+      .then((response) => {
+        console.log(response.data);
+        let data = JSON.parse(response.data.content);
+        this.setState({ notes: data.notes });
+      })
+      .catch((err) => console.log(err))
+      .then(() => {
+        this.setState({ loading: false });
+      });
+  }
+
+  handleSave(e) {
+    this.setState({ loading: true });
+    axios
+      .post(API_URL + "save", {
+        workspaceName: localStorage.getItem("workspaceName"),
+        passwordHash: localStorage.getItem("passwordToken"),
+        workspaceContent: JSON.stringify({ notes: this.state.notes }),
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+      .then(() => {
+        this.setState({ loading: false });
+      });
+  }
+
   createNewContent() {
     this.setState((state) => {
       let note = {
@@ -109,7 +149,7 @@ class Workspace extends React.Component {
 
   renderNotes() {
     let noteClasses =
-      "px-6 py-3 text-left flex font-medium hover:bg-gray-100 text-gray-500 uppercase tracking-wider min-h ";
+      "px-6 py-3 text-left flex font-medium hover:bg-gray-200 text-gray-500 uppercase tracking-wider min-h ";
     let selected = "bg-indigo-100 hover:bg-indigo-100";
     return this.state.notes.map((note, index) => (
       <tr>
@@ -138,10 +178,36 @@ class Workspace extends React.Component {
     ));
   }
 
+  handleChangePassword(newPassword) {
+    this.setState({ loading: true });
+    const newPasswordHash = computeHash(newPassword);
+    axios
+      .post(API_URL + "save", {
+        workspaceName: localStorage.getItem("workspaceName"),
+        passwordHash: localStorage.getItem("passwordToken"),
+        workspaceContent: "",
+        newPasswordHash: newPasswordHash,
+      })
+      .then((response) => {
+        localStorage.setItem("passwordToken", newPasswordHash);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .then(() => {
+        this.setState({ loading: false });
+      });
+  }
+
   render() {
     return (
       <div class="h-screen ">
-        <Header history={this.props.history} />
+        <Header
+          loading={this.state.loading}
+          history={this.props.history}
+          onSave={this.handleSave}
+          onChangePassword={this.handleChangePassword}
+        />
         <div class=" items-center justify-center ">
           <div>
             <div class="md:grid md:grid-cols-3 md:gap-6 m-4">
@@ -188,7 +254,7 @@ class Workspace extends React.Component {
                           id="about"
                           name="name"
                           type="text"
-                          class=" py-2 px-2 border-0 border-b-2 border-indigo-200 outline-none  text-xl  w-full transition-all "
+                          class=" py-2 px-2 border-0 border-b-2 border-indigo-200 outline-none  text-xl bg-transparent w-full transition-all "
                           placeholder="Name"
                           value={this.state.notes[this.state.activeNote].name}
                           onChange={this.handleNameChange}
@@ -203,7 +269,7 @@ class Workspace extends React.Component {
                           {this.state.contentEdit ? (
                             <textarea
                               autoFocus="true"
-                              class="flex-grow w-full overflow-auto outline-none"
+                              class="flex-grow w-full overflow-auto outline-none bg-transparent"
                               id="content"
                               style={{ resize: "none", maxHeight: "100%" }}
                               placeholder="Content "
@@ -216,7 +282,7 @@ class Workspace extends React.Component {
                               }}
                             ></textarea>
                           ) : (
-                            <div class="markdown-content">
+                            <div class="">
                               <ReactMarkdown>
                                 {
                                   this.state.notes[this.state.activeNote]
