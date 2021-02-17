@@ -2,7 +2,7 @@ import Header from "./Header.js";
 import React from "react";
 import ReactDOM from "react-dom";
 import ReactMarkdown from "react-markdown";
-import { computeHash } from "../utils/utils.js";
+import { computeHash, encrypt, decrypt } from "../utils/utils.js";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { API_URL } from "../utils/constants";
@@ -38,7 +38,13 @@ class Workspace extends React.Component {
       })
       .then((response) => {
         console.log(response.data);
-        let data = JSON.parse(response.data.content);
+        let data = response.data.content;
+        if (data != "") {
+          data = decrypt(data, localStorage.getItem("passwordKey"));
+          data = JSON.parse(data);
+        } else {
+          data.notes = [];
+        }
         this.setState({ notes: data.notes });
       })
       .catch((err) => console.log(err))
@@ -53,7 +59,10 @@ class Workspace extends React.Component {
       .post(API_URL + "save", {
         workspaceName: localStorage.getItem("workspaceName"),
         passwordHash: localStorage.getItem("passwordToken"),
-        workspaceContent: JSON.stringify({ notes: this.state.notes }),
+        workspaceContent: encrypt(
+          JSON.stringify({ notes: this.state.notes }),
+          localStorage.getItem("passwordKey")
+        ),
       })
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
@@ -65,7 +74,7 @@ class Workspace extends React.Component {
   createNewContent() {
     this.setState((state) => {
       let note = {
-        name: "New note",
+        name: "New Note",
         content: "",
       };
       state.notes.push(note);
@@ -181,15 +190,20 @@ class Workspace extends React.Component {
   handleChangePassword(newPassword) {
     this.setState({ loading: true });
     const newPasswordHash = computeHash(newPassword);
+    const newPasswordKey = computeHash(newPassword + ".key");
     axios
       .post(API_URL + "save", {
         workspaceName: localStorage.getItem("workspaceName"),
         passwordHash: localStorage.getItem("passwordToken"),
-        workspaceContent: "",
+        workspaceContent: encrypt(
+          JSON.stringify({ notes: this.state.notes }),
+          newPasswordKey
+        ),
         newPasswordHash: newPasswordHash,
       })
       .then((response) => {
         localStorage.setItem("passwordToken", newPasswordHash);
+        localStorage.setItem("passwordKey", newPasswordKey);
       })
       .catch((err) => {
         console.log(err);
@@ -247,9 +261,9 @@ class Workspace extends React.Component {
               </div>
               <div class="mt-2 md:mt-0 md:col-span-2">
                 <div class="  ">
-                  <div class="px-4 py-3 border-2 mb-2 h-full border-purple-300 rounded-md ">
+                  <div class="px-2 py-1 border-2 mb-2 h-full border-purple-300 rounded-md ">
                     <div>
-                      <div class="mt-1 mb-3 overflow-auto ">
+                      <div class="mt-1 mb-3 overflow-auto edit-notes">
                         <input
                           id="about"
                           name="name"
@@ -266,13 +280,15 @@ class Workspace extends React.Component {
                             this.setState({ contentEdit: true });
                           }}
                         >
-                          {this.state.contentEdit ? (
+                          {this.state.contentEdit ||
+                          this.state.notes[this.state.activeNote].content ==
+                            "" ? (
                             <textarea
                               autoFocus="true"
                               class="flex-grow w-full overflow-auto outline-none bg-transparent"
                               id="content"
                               style={{ resize: "none", maxHeight: "100%" }}
-                              placeholder="Content "
+                              placeholder="Start writing here..."
                               value={
                                 this.state.notes[this.state.activeNote].content
                               }
@@ -282,7 +298,7 @@ class Workspace extends React.Component {
                               }}
                             ></textarea>
                           ) : (
-                            <div class="">
+                            <div class="markdown">
                               <ReactMarkdown>
                                 {
                                   this.state.notes[this.state.activeNote]

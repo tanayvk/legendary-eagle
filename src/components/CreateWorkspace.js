@@ -13,6 +13,8 @@ class CreateWorkspace extends React.Component {
     this.state.accessLoading = false;
     this.state.workspaceName = "";
     this.state.workspacePassword = "";
+    this.state.generatedName = "";
+    this.state.generatedPassword = "";
     this.state.offset = "";
     this.state.errorMessage = "";
 
@@ -77,7 +79,8 @@ class CreateWorkspace extends React.Component {
       .then((response) => {
         this.setState({
           workspaceName: response.data.name,
-          workspacePassword: response.data.password,
+          generatedName: response.data.name,
+          generatedPassword: response.data.password,
         });
         this.shake();
       })
@@ -95,7 +98,43 @@ class CreateWorkspace extends React.Component {
     this.setState({
       accessLoading: true,
     });
+
     const passwordHash = computeHash(this.state.workspacePassword);
+    const passwordKey = computeHash(this.state.workspacePassword + ".key");
+    let success = (response) => {
+      localStorage.setItem("workspaceName", this.state.workspaceName);
+      localStorage.setItem("passwordToken", passwordHash);
+      localStorage.setItem("passwordKey", passwordKey);
+
+      this.props.history.push("/workspace");
+      console.log(response);
+    };
+
+    if (this.state.generatedName == this.state.workspaceName) {
+      this.setState({ generatedName: "", generatedPassword: "" });
+      axios
+        .post(
+          API_URL + "save",
+          {
+            workspaceName: this.state.workspaceName,
+            passwordHash: computeHash(this.state.generatedPassword),
+            newPasswordHash: computeHash(this.state.workspacePassword),
+            workspaceContent: "",
+          },
+          { headers: { "Content-Type": "text/plain" } }
+        )
+        .then(success)
+        .catch((err) => console.log(err))
+        .then(() => {
+          this.setState({
+            accessLoading: false,
+          });
+        });
+
+      return;
+    }
+
+    console.log(passwordHash, passwordKey);
     axios
       .post(
         API_URL + "get",
@@ -105,12 +144,7 @@ class CreateWorkspace extends React.Component {
         },
         { headers: { "Content-Type": "text/plain" } }
       )
-      .then((response) => {
-        localStorage.setItem("workspaceName", this.state.workspaceName);
-        localStorage.setItem("passwordToken", passwordHash);
-        this.props.history.push("/workspace");
-        console.log(response);
-      })
+      .then(success)
       .catch((error) => {
         if (error.response.status == 401)
           this.setState({
