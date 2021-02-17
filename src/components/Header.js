@@ -14,7 +14,7 @@ class Header extends React.Component {
 
   renderChangePassword() {
     return (
-      <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-100 p-3 ring-1 ring-black ring-opacity-5">
+      <div class="origin-top-right absolute right-0 mt-2 w-1/2 lg:w-56 rounded-md shadow-lg bg-gray-100 p-3 ring-1 ring-black ring-opacity-5">
         <p>New Password:</p>
         <input
           type="text"

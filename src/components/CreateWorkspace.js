@@ -30,11 +30,11 @@ class CreateWorkspace extends React.Component {
     }
 
     return (
-      <div className="mb-4 mt-4 ">
-        <form className="space-y-2 font-mono text-2xl ">
+      <div className=" sm:mb-2 sm:mb-2  lg:mb-4 lg:mt-4 ">
+        <form className="lg:space-y-2 font-mono sm-text-sm lg:text-2xl ">
           {this.state.errorMessage != "" ? (
-            <div class="items-center text-center mb-2">
-              <p class="bg-red-400 text-sm px-4 py-2 rounded-full inline">
+            <div class="items-center text-center lg:mb-2">
+              <p class="bg-red-400 lg:text-sm lg:px-4 lg:py-2 lg:rounded-full inline">
                 {this.state.errorMessage}
               </p>
             </div>
@@ -45,7 +45,7 @@ class CreateWorkspace extends React.Component {
             <input
               type="text"
               placeholder="Workspace Handle"
-              className="py-3 px-4 outline-none w-full"
+              className="lg:py-3 px-2 py-1 lg:px-4 outline-none lg:w-full"
               value={this.state.workspaceName}
               onChange={(e) => this.setState({ workspaceName: e.target.value })}
             />
@@ -54,7 +54,7 @@ class CreateWorkspace extends React.Component {
             <input
               type="text"
               placeholder="Shh.. Top secret!"
-              className="py-3 px-4 outline-none w-full"
+              className="lg:py-3 lg:px-4 outline-none lg:w-full"
               value={this.state.workspacePassword}
               onChange={(e) =>
                 this.setState({ workspacePassword: e.target.value })
@@ -176,7 +176,7 @@ class CreateWorkspace extends React.Component {
     ) : (
       <div class="flex flex-row-reverse">
         <button
-          className={"accent blocks text-lg"}
+          className={"accent blocks sm:text- lg:text-lg"}
           onClick={this.handleAccess}
           style={{ "--block-accent-color": "#4f46e5" }}
         >
