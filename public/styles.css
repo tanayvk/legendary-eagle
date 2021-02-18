@@ -22,3 +22,9 @@
    list-style-position: inside; 
    margin-left: 10px; 
 }
+
+.markdown img {
+    width: 50%;
+    height: 50%;
+    object-fit: contain;
+}
