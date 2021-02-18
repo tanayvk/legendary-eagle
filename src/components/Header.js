@@ -48,26 +48,28 @@ class Header extends React.Component {
     return (
       <div class="p-0 bg-gradient-to-b from-indigo-600 to-indigo-500">
         <nav class="flex items-center justify-between flex-wrap bg-teal px-6 py-2">
-          <div class="block lg:hidden">
-            <button class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white"></button>
-          </div>
-          <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+          <div class="w-full block lg:flex lg:items-center lg:w-auto">
             <div class="lg:flex-grow">
-              <div class="blocks inline px-3">
-                <span class="text-lg font-mono">
+              <div class=" ">
+                <span class="text-lg font-mono blocks float-left px-3 ">
                   {localStorage.getItem("workspaceName")}
                 </span>
+                <div class="px-3 ">
+                  {this.props.loading ? (
+                    <i class="fa fa-2x text-red-400 fa-refresh fa-spin"></i>
+                  ) : (
+                    <i class="fa fa-2x text-green-400 fa-check-circle-o"></i>
+                  )}
+                </div>
               </div>
             </div>
-            <div class="px-3">
-              {this.props.loading ? (
-                <i class="fa fa-2x text-red-400 fa-refresh fa-spin"></i>
-              ) : (
-                <i class="fa fa-2x text-green-400 fa-check-circle-o"></i>
-              )}
-            </div>
-            <div class="">
-              <div class="block relative">
+          </div>
+          <div class="block md:hidden">
+            <button>menu</button>
+          </div>
+          <div class="hidden md:block md:flex md:flex-row">
+            <div class="md:inline">
+              <div class="block relative ">
                 <a
                   class="blocks"
                   onClick={(e) => {
@@ -81,7 +83,7 @@ class Header extends React.Component {
                 {this.state.changingPassword && this.renderChangePassword()}
               </div>
             </div>
-            <div>
+            <div class="md:inline">
               <a class=" blocks accent " onClick={this.props.onSave}>
                 Save
               </a>
