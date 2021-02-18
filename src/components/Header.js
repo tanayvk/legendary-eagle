@@ -14,32 +14,37 @@ class Header extends React.Component {
 
   renderChangePassword() {
     return (
-      <div class="origin-top-right absolute right-0 mt-2 w-1/2 lg:w-56 rounded-md shadow-lg bg-gray-100 p-3 ring-1 ring-black ring-opacity-5">
-        <p>New Password:</p>
-        <input
-          type="text"
-          value={this.state.newPassword}
-          onChange={(e) => {
-            this.setState({ newPassword: e.target.value });
-          }}
-        />
-        <button
-          class="blocks accent float-left"
-          onClick={(e) => {
-            this.setState({ changingPassword: false });
-            this.props.onChangePassword(this.state.newPassword);
-          }}
-        >
-          Confirm
-        </button>
-        <button
-          class="blocks "
-          onClick={(e) => {
-            this.setState({ changingPassword: false });
-          }}
-        >
-          Cancel
-        </button>
+      <div class="origin-top-right md:absolute right-0 mt-2 md:p-3">
+        <div class="blocks">
+          <div>
+            <p>New Password:</p>
+            <input
+              class="outline-none border border-black border-1"
+              type="text"
+              value={this.state.newPassword}
+              onChange={(e) => {
+                this.setState({ newPassword: e.target.value });
+              }}
+            />
+          </div>
+          <button
+            class="blocks accent float-left"
+            onClick={(e) => {
+              this.setState({ changingPassword: false });
+              this.props.onChangePassword(this.state.newPassword);
+            }}
+          >
+            Confirm
+          </button>
+          <button
+            class="blocks "
+            onClick={(e) => {
+              this.setState({ changingPassword: false });
+            }}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     );
   }
@@ -54,7 +59,7 @@ class Header extends React.Component {
                 <span class="text-lg font-mono blocks float-left px-3 ">
                   {localStorage.getItem("workspaceName")}
                 </span>
-                <div class="px-3 ">
+                <div class="px-3 block align-middle float-left">
                   {this.props.loading ? (
                     <i class="fa fa-2x text-red-400 fa-refresh fa-spin"></i>
                   ) : (
@@ -63,11 +68,25 @@ class Header extends React.Component {
                 </div>
               </div>
             </div>
+            <div class="md:hidden text-right float-right">
+              <button
+                class="blocks"
+                onClick={(e) =>
+                  this.setState((state) => {
+                    return { menuActive: !state.menuActive };
+                  })
+                }
+              >
+                <i class="fa fa-2x fa-bars"></i>
+              </button>
+            </div>
           </div>
-          <div class="block md:hidden">
-            <button>menu</button>
-          </div>
-          <div class="hidden md:block md:flex md:flex-row">
+          <div
+            class={
+              (!this.state.menuActive ? "hidden" : "") +
+              " w-full md:w-auto md:block md:flex md:flex-row"
+            }
+          >
             <div class="md:inline">
               <div class="block relative ">
                 <a

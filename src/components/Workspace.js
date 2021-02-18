@@ -170,6 +170,10 @@ class Workspace extends React.Component {
               : noteClasses
           }
           onClick={(e) => {
+            document.getElementById("edit-note-name").focus();
+            document
+              .getElementById("edit-notes")
+              .scrollIntoView({ behavior: "smooth" });
             this.setState({
               activeNote: index,
             });
@@ -224,8 +228,8 @@ class Workspace extends React.Component {
         />
         <div class=" items-center justify-center ">
           <div>
-            <div class="md:grid md:grid-cols-3 md:gap-6 m-4">
-              <div class="md:col-span-1 overflow-y-auto overflow-x-hidden ">
+            <div class="grid grid-cols-1 sm:grid-cols-3 md:gap-6 m-4">
+              <div class="md:col-span-1 overflow-hidden ">
                 <div class="px-4 sm:px-0">
                   <div class="flex flex-col">
                     <div class="-my-2  sm:-mx-6  lg:-mx-8">
@@ -263,9 +267,12 @@ class Workspace extends React.Component {
                 <div class="  ">
                   <div class="px-2 py-1 border-2 mb-2 h-full border-purple-300 rounded-md ">
                     <div>
-                      <div class="mt-1 mb-3 overflow-auto edit-notes">
+                      <div
+                        id="edit-notes"
+                        class="mt-1 mb-3 overflow-auto edit-notes"
+                      >
                         <input
-                          id="about"
+                          id="edit-note-name"
                           name="name"
                           type="text"
                           class=" py-2 px-2 border-0 border-b-2 border-indigo-200 outline-none  text-xl bg-transparent w-full transition-all "
