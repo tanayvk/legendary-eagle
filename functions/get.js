@@ -16,7 +16,7 @@ exports.handler = async function (event, context) {
   var body = {};
   var headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": "https://workspaces.tanay.xyz",
   };
   if (event.body) {
     try {

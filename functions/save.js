@@ -59,6 +59,7 @@ exports.handler = async function (event, context) {
     statusCode: 200,
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "https://workspaces.tanay.xyz",
     },
     body: JSON.stringify({
       request: body,
