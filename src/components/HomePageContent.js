@@ -28,8 +28,8 @@ function HomePageContent() {
   return (
     <div>
       <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-        <div class="lg:space-y-12  text-left">
-          <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-4xl md:text-6xl">
+        <div class="lg:space-y-12  text-left ">
+          <h1 class="text-4xl text-center md:text-left mb-4 tracking-tight font-extrabold text-gray-900 sm:text-4xl md:text-6xl">
             <span class="block xl:inline">Create&nbsp;</span>
             <span class="block text-indigo-600 xl:inline">Workspaces </span>
             <span class="block xl:inline">in seconds!</span>
