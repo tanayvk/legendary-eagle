@@ -3,15 +3,6 @@ const CryptoJS = require("crypto-js");
 const Base64 = require("crypto-js/enc-base64");
 const querystring = require("querystring");
 
-var serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-if (firebase.apps.length == 0) {
-  firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccount),
-    databaseURL: "https://legendary-eagle-default-rtdb.firebaseio.com",
-  });
-} else firebase.app();
-var database = firebase.database();
-
 exports.handler = async function (event, context) {
   var body = {};
   if (event.body) {
@@ -32,6 +23,15 @@ exports.handler = async function (event, context) {
     console.log(body);
     return { statusCode: 400 };
   }
+
+  var serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+  if (firebase.apps.length == 0) {
+    firebase.initializeApp({
+      credential: firebase.credential.cert(serviceAccount),
+      databaseURL: "https://legendary-eagle-default-rtdb.firebaseio.com",
+    });
+  } else firebase.app();
+  var database = firebase.database();
 
   const { workspaceName, passwordHash, workspaceContent } = body;
   const workspaceRef = database.ref("workspaces/" + workspaceName);

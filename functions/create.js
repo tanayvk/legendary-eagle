@@ -2,14 +2,7 @@ const firebase = require("firebase-admin");
 const CryptoJS = require("crypto-js");
 const Base64 = require("crypto-js/enc-base64");
 
-var serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-if (!firebase.apps.length) {
-  firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccount),
-    databaseURL: "https://legendary-eagle-default-rtdb.firebaseio.com",
-  });
-} else firebase.app();
-var database = firebase.database();
+let database;
 
 function generateRandomLetter() {
   let letterIndex = Math.floor(Math.random() * 26);
@@ -43,6 +36,14 @@ async function generateWorkspaceName() {
 }
 
 exports.handler = async function (event, context) {
+  var serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      credential: firebase.credential.cert(serviceAccount),
+      databaseURL: "https://legendary-eagle-default-rtdb.firebaseio.com",
+    });
+  } else firebase.app();
+  database = firebase.database();
   let workspaceName = await generateWorkspaceName();
   let password = await generateString();
 

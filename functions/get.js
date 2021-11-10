@@ -3,16 +3,16 @@ const CryptoJS = require("crypto-js");
 const Base64 = require("crypto-js/enc-base64");
 const querystring = require("querystring");
 
-var serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-if (firebase.apps.length == 0) {
-  firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccount),
-    databaseURL: "https://legendary-eagle-default-rtdb.firebaseio.com",
-  });
-} else firebase.app();
-var database = firebase.database();
-
 exports.handler = async function (event, context) {
+  var serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+  if (firebase.apps.length == 0) {
+    firebase.initializeApp({
+      credential: firebase.credential.cert(serviceAccount),
+      databaseURL: "https://legendary-eagle-default-rtdb.firebaseio.com",
+    });
+  } else firebase.app();
+  var database = firebase.database();
+
   var body = {};
   var headers = {
     "Content-Type": "application/json",
